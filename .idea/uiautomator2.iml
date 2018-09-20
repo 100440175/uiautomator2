@@ -4,6 +4,7 @@
     <content url="file://$MODULE_DIR$/../HTMLTestRunner_cn" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/examples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/com.xiaoxiao.ludan" isTestSource="false" />
     </content>
     <content url="file://$MODULE_DIR$/../utx" />
     <orderEntry type="inheritedJdk" />

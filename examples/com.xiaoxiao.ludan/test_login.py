@@ -8,10 +8,10 @@ import time
 from utx import *
 
 
-class SimpleTestCase(unittest.TestCase):
+class TestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.d = u2.connect_wifi('192.168.11.125')
+        cls.d = u2.connect()
         cls.d.set_orientation('natural')
         cls.d.healthcheck()
         cls.d.implicitly_wait(10)
@@ -27,16 +27,23 @@ class SimpleTestCase(unittest.TestCase):
         self.d.app_clear("com.xiaoxiao.ludan")
         self.d.app_stop_all()
 
-    def login(self,username,password):
+    @tag(Tag.SP)
+    @data([81,12345678])
+    def test_login(self,username,password):
+        """ 测试登录
+
+        :return:
+        """
         d = self.sess
         d.watchers.remove()
         d.watchers.watched = False
+        log.info('开始登录>>>>>>>>>>')
         d.watcher("获取app权限").when(resourceId="android:id/button1").when(text="允许").click(text="允许")
         d.watchers.run()
         d(resourceId="com.xiaoxiao.ludan:id/et_account").set_text(username,timeout=10)
         d(resourceId="com.xiaoxiao.ludan:id/et_password").set_text(password,timeout=5)
         d(resourceId="com.xiaoxiao.ludan:id/bt_login").click_exists(timeout=5)
-        if d(resourceId="com.xiaoxiao.ludan:id/title").exists(timeout=5) == True:
+        if d(resourceId="com.xiaoxiao.ludan:id/title").exists(timeout=3) == True:
             d(resourceId="com.xiaoxiao.ludan:id/ed_vc").set_text('8888',timeout=5)
             d(resourceId="com.xiaoxiao.ludan:id/tv_sign").click(timeout=5)
         else:
@@ -45,18 +52,8 @@ class SimpleTestCase(unittest.TestCase):
             log.info(d.toast.get_message(10, 10))
         else:
             log.error(d.toast.get_message(10, 10))
-
-
-
-
-    @tag(Tag.FULL)
-    def test_login(self):
-        """ 测试登录
-
-        :return:
-        """
-        self.login(69,12345678)
-
+            print(d.toast.get_message(10, 10))
+            self.assertTrue(d(text=u"首页").exists(timeout=5), msg=d.toast.get_message(10, 5))
 
 if __name__ == '__main__':
     unittest.main()
