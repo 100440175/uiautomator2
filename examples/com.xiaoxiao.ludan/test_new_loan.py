@@ -22,7 +22,7 @@ class TestCase(unittest.TestCase):
         cls.NowTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         cls.test_random = test_random_date()
         Case_DIR = os.path.abspath(os.path.dirname(__file__))
-        cls.loanID_PATH = os.path.join(Case_DIR + "\\config\\loanID.txt")
+        cls.loanID_PATH = os.path.join(Case_DIR + "\\config\\loan_info.txt")
 
     def setUp(self):
         self.d.set_fastinput_ime(True)
@@ -57,7 +57,7 @@ class TestCase(unittest.TestCase):
 
     @tag(Tag.FULL)
     def test_new_loan(self):
-        """ 新建报单
+        """ 业务员新建报单
 
         :return:
         """
@@ -115,11 +115,15 @@ class TestCase(unittest.TestCase):
                 d(text='提交按揭部').click(timeout=5)
                 if d(resourceId="com.xiaoxiao.ludan:id/title", text=u'报单详情').exists(timeout=5) == True:
                     log.info(d.toast.get_message(10, 5))
-                    loanID = d(resourceId="com.xiaoxiao.ludan:id/tv_content_name", text=u"贷款编号：").sibling(resourceId="com.xiaoxiao.ludan:id/tv_content").get_text(timeout=5)
-                    log.info('本次生成的贷款编号为：%s' % loanID)
-                    print('本次生成的贷款编号为：%s' % loanID)
+                    d(scrollable=True).scroll.to(text="最新进度：")
+                    get_loanID = d(resourceId="com.xiaoxiao.ludan:id/tv_content_name", text=u"贷款编号：").sibling(resourceId="com.xiaoxiao.ludan:id/tv_content").get_text(timeout=5)
+                    get_loanCount = d(resourceId="com.xiaoxiao.ludan:id/tv_content_name", text=u"申请金额：").sibling(resourceId="com.xiaoxiao.ludan:id/tv_content").get_text(timeout=3)
+                    log.info('贷款编号为：%s' % get_loanID)
+                    log.info('贷款金额为：%s' % get_loanCount)
+                    print('贷款编号为：%s' % get_loanID)
+                    print('贷款金额为：%s' % get_loanCount)
                     with open(self.loanID_PATH, 'w') as f:
-                        f.write(loanID)
+                        f.write(get_loanID)
                 else:
                     log.error('服务器返回：%s' % d.toast.get_message(10, 5))
                     print('服务器返回：%s' % d.toast.get_message(10, 5))
@@ -132,10 +136,6 @@ class TestCase(unittest.TestCase):
             log.error('服务器返回：%s' % d.toast.get_message(10, 5))
             print('服务器返回：%s' % d.toast.get_message(10, 5))
             self.assertTrue(d(resourceId="com.xiaoxiao.ludan:id/title",text='快速报单').exists(),msg='服务器返回：%s' % d.toast.get_message(10, 5))
-
-
-
-
 
 
 if __name__ == '__main__':

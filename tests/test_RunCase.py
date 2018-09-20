@@ -6,7 +6,7 @@ import os
 from utx import *
 
 if __name__ == '__main__':
-    setting.run_case = {Tag.FULL}
+    setting.run_case = {Tag.Encoding}
     # setting.run_case = {Tag.FULL}   # 运行全部测试用例
     # setting.run_case = {Tag.SMOKE}  # 只运行SMOKE标记的测试用例
     # setting.run_case = {Tag.SMOKE, Tag.SP}   # 只运行SMOKE和SP标记的测试用例
